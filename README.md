@@ -16,6 +16,7 @@ The code explores mutual impedance and channel characteristics of compact antenn
   - `get_hex_positions`: Generates hexagonal array positions.
   - `get_self_impedance`: Computes self-impedance for the TM₁ mode.
   - `compute_mutual_impedance`: Calculates mutual impedance based on distance and angle.
+- `eigenvalue_plot.py`: Computes and plot the dominant SNR eigenmode across a wide frequency sweep (2–20 GHz) for a fixed antenna spacing.
 
  #REFERENCES 
 - [1] N. Balasuriya, A. Mezghani, and E. Hossain, “Tightly Coupled Hexagonal Antenna Arrays for Multi-band Massive MIMO Systems,” in Proc. IEEE Wireless Communications Letters, June 2025.
