@@ -22,3 +22,4 @@ The code explores mutual impedance and channel characteristics of compact antenn
 - [1] N. Balasuriya, A. Mezghani, and E. Hossain, “Tightly Coupled Hexagonal Antenna Arrays for Multi-band Massive MIMO Systems,” in Proc. IEEE Wireless Communications Letters, June 2025.
 
 
+Purpose for studying this paper: The purpose of studying the paper "Tightly Coupled Hexagonal Antenna Arrays for Multi-band Massive MIMO Systems" is to establish a theoretical and simulation foundation for my proposed engineering project, which focuses on energy optimization of multi-band antenna arrays using Deep Reinforcement Learning (DRL). This paper introduces a circuit-theoretic approach to modeling self and mutual impedance in tightly coupled hexagonal arrays, providing a physically realistic framework for capacity evaluation in both near-field and far-field conditions.
