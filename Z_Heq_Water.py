@@ -1,5 +1,8 @@
+# Z_Heq_Water.py
+
+
 import numpy as np
-from hex_array import get_hex_positions, get_self_impedance, compute_mutual_impedance
+from hex_array import get_hex_positions, get_self_impedance, compute_mutual_impedance, compute_build_ZRT_ff
 
 def build_Z_matrix(f, c, positions, Zpp):
     """
@@ -69,9 +72,10 @@ def build_Z_RT_matrix(f, c, positions, Zpp, D):
         # Distance to Rx antenna assuming broadside arrays 
         dist = np.sqrt(r**2 + D**2)
         # Gamma: angle having tilt theta = pi/2
-        gamma_q = np.arctan2(dy, dx)
+        #gamma_q = np.arctan2(dy, dx)
+        gamma_q= np.arccos(dx / r)
         # cos(beta) having tilt theta = pi/2
-        cos_beta = (r ) / dist
+        cos_beta = (r * np.cos(gamma_q)) / dist
         # Beta angle
         beta_j = np.arccos(cos_beta)
 
@@ -79,7 +83,11 @@ def build_Z_RT_matrix(f, c, positions, Zpp, D):
 
     return Z_RT
 
-def compute_Heq_and_Rn(f, c, a, Ra, delta, D, grid_size, A, Rr, Rt, Nf, T):
+
+
+
+
+def compute_Heq_and_Rn(f, c, a, Ra, delta, D, grid_size, A, Rr, Rt, Nf, T, mode, eta=3.5):
     """
     Computes the equivalent channel matrix (H_eq) and the noise covariance matrix (Rn) 
     for a tightly coupled hexagonal antenna array operating in the near field.
@@ -112,8 +120,19 @@ def compute_Heq_and_Rn(f, c, a, Ra, delta, D, grid_size, A, Rr, Rt, Nf, T):
     Zpp = get_self_impedance(f, c, a, Ra)
     Z_R = np.array([[Zpp]])
     Z_T = build_Z_matrix(f, c, positions, Zpp)
-
-    Z_RT = build_Z_RT_matrix(f, c, positions, Zpp, D)
+    real_ZT = np.real(Z_T)
+    
+    if np.any(real_ZT < 0):
+        real_ZT = np.maximum(real_ZT, 1e-6)
+    Z_T = real_ZT + 1j * np.imag(Z_T)    
+   
+    if mode == 'NF':
+        Z_RT = build_Z_RT_matrix(f, c, positions, Zpp, D)  # near-field
+    elif mode == 'FF':
+        Z_RT = compute_build_ZRT_ff(f, c, Z_R, Z_T, eta)  # far-field
+    else:
+        raise ValueError("Mode must be 'NF' or 'FF'")
+    
     Z_TR = Z_RT.conj().T
     I_rx = np.eye(1)
     I_tx = np.eye(N)
@@ -153,3 +172,4 @@ def water_filling(lambdas, P_T):
     power_alloc_unsorted = np.zeros(n)
     power_alloc_unsorted[sorted_idx] = power_alloc
     return power_alloc_unsorted
+
